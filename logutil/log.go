@@ -256,37 +256,3 @@ func BgLogger() *zap.Logger {
 	return zaplog.L()
 }
 
-// WithKeyValue attaches key/value to context.
-func WithKeyValue(ctx context.Context, key, value string) context.Context {
-	var logger *zap.Logger
-	if ctxLogger, ok := ctx.Value(ctxLogKey).(*zap.Logger); ok {
-		logger = ctxLogger
-	} else {
-		logger = zaplog.L()
-	}
-	return context.WithValue(ctx, ctxLogKey, logger.With(zap.String(key, value)))
-}
-
-// TraceEventKey presents the TraceEventKey in span log.
-const TraceEventKey = "event"
-
-// Event records event in current tracing span.
-func Event(ctx context.Context, event string) {
-	if span := opentracing.SpanFromContext(ctx); span != nil && span.Tracer() != nil {
-		span.LogFields(tlog.String(TraceEventKey, event))
-	}
-}
-
-// Eventf records event in current tracing span with format support.
-func Eventf(ctx context.Context, format string, args ...interface{}) {
-	if span := opentracing.SpanFromContext(ctx); span != nil && span.Tracer() != nil {
-		span.LogFields(tlog.String(TraceEventKey, fmt.Sprintf(format, args...)))
-	}
-}
-
-// SetTag sets tag kv-pair in current tracing span
-func SetTag(ctx context.Context, key string, value interface{}) {
-	if span := opentracing.SpanFromContext(ctx); span != nil && span.Tracer() != nil {
-		span.SetTag(key, value)
-	}
-}
