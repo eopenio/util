@@ -30,7 +30,7 @@ import (
 
 const (
 	// Default Config File
-	DefaultConfigFile = "etc/srv.toml"
+	DefaultConfigFile = "config/srv.toml"
 )
 
 type Config struct {
