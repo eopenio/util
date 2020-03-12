@@ -28,7 +28,10 @@ import (
 	"strings"
 )
 
-const DefaultConfigFile = "etc/srv.toml"
+const (
+	// Default Config File
+	DefaultConfigFile = "etc/srv.toml"
+)
 
 type Config struct {
 	Host             string   `toml:"host" json:"host"`
@@ -283,10 +286,19 @@ func NewConfig() *Config {
 	return &conf
 }
 
-func GetGlobalConfig(filename string) *Config {
+func GetGlobalDefaultConfig() *Config {
 	var configFile string
-	if filename != "" {
-		configFile = filename
+	configFile = DefaultConfigFile
+	cfg := NewConfig()
+	terror.MustNil(config.LoadFile(configFile))
+	terror.MustNil(config.Scan(&cfg))
+	return cfg
+}
+
+func GetGlobaConfig(cf string) *Config {
+	var configFile string
+	if cf != "" {
+		configFile = cf
 	} else {
 		configFile = DefaultConfigFile
 	}
