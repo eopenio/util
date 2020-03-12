@@ -290,6 +290,8 @@ func GetGlobalConfig(filename string) *Config {
 	} else {
 		configFile = DefaultConfigFile
 	}
+	cfg := NewConfig()
 	terror.MustNil(config.LoadFile(configFile))
-	return NewConfig()
+	terror.MustNil(config.Scan(&cfg))
+	return cfg
 }
