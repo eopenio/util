@@ -295,6 +295,15 @@ func GetGlobalDefaultConfig() *Config {
 	return cfg
 }
 
+func GetGlobalDefaultConfigValue(cf string, path ...string) interface{} {
+	var configFile string
+	var value interface{}
+	configFile = DefaultConfigFile
+	terror.MustNil(config.LoadFile(configFile))
+	config.Get(path...).Scan(&value)
+	return value
+}
+
 func GetGlobaConfig(cf string) *Config {
 	var configFile string
 	if cf != "" {
@@ -306,4 +315,17 @@ func GetGlobaConfig(cf string) *Config {
 	terror.MustNil(config.LoadFile(configFile))
 	terror.MustNil(config.Scan(&cfg))
 	return cfg
+}
+
+func GetGlobaConfigValue(cf string, path ...string) interface{} {
+	var value interface{}
+	var configFile string
+	if cf != "" {
+		configFile = cf
+	} else {
+		configFile = DefaultConfigFile
+	}
+	terror.MustNil(config.LoadFile(configFile))
+	config.Get(path...).Scan(&value)
+	return value
 }
